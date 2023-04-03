@@ -3,7 +3,7 @@ import pandas as pd
 
 crash_raw = pd.read_csv("Traffic_Crash_Reports__CPD_.csv")
 
-crash_data = raw 
+crash_data = crash_raw 
 
 ## Convert data types
 # Strings to dates
