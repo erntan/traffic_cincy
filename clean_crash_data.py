@@ -1,60 +1,60 @@
 # Script to clean crash data
 import pandas as pd 
 
-raw = pd.read_csv("Traffic_Crash_Reports__CPD_.csv")
+crash_raw = pd.read_csv("Traffic_Crash_Reports__CPD_.csv")
 
-data = raw 
+crash_data = raw 
 
 ## Convert data types
 # Strings to dates
-data.loc[:, 'CRASHDATE'] = pd.to_datetime(data.CRASHDATE)
-data.loc[:, 'DATECRASHREPORTED'] = pd.to_datetime(data.DATECRASHREPORTED)
+crash_data.loc[:, 'CRASHDATE'] = pd.to_datetime(crash_data.CRASHDATE)
+crash_data.loc[:, 'DATECRASHREPORTED'] = pd.to_datetime(crash_data.DATECRASHREPORTED)
 
 # Numbers to strings
-data.loc[:, 'LOCALREPORTNO'] = data.LOCALREPORTNO.apply(str )
-data.loc[:, 'CRASHSEVERITYID'] = data.CRASHSEVERITYID.apply(str)
+crash_data.loc[:, 'LOCALREPORTNO'] = crash_data.LOCALREPORTNO.apply(str )
+crash_data.loc[:, 'CRASHSEVERITYID'] = crash_data.CRASHSEVERITYID.apply(str)
 
 # Stripping the trailing zeros from ZIP 
-data.loc[:,'ZIP'] = data.ZIP.astype(str)
-data.loc[:,'ZIP'] = data.ZIP.str[:5]
+crash_data.loc[:,'ZIP'] = crash_data.ZIP.astype(str)
+crash_data.loc[:,'ZIP'] = crash_data.ZIP.str[:5]
 
 ## Splitting fields - Separate scores from descriptions
-data[['CRASHSEVERITY','CRASHSEVERITYDESCR']] = data.CRASHSEVERITY.str.split(pat=' - ', expand=True)
-data.CRASHSEVERITY = data.CRASHSEVERITY.astype('Int64')
+crash_data[['CRASHSEVERITY','CRASHSEVERITYDESCR']] = crash_data.CRASHSEVERITY.str.split(pat=' - ', expand=True)
+crash_data.CRASHSEVERITY = crash_data.CRASHSEVERITY.astype('Int64')
 
-data[['ROADCONTOUR','ROADCONTOURDESCR']] = data.ROADCONTOUR.str.split(pat=' - ', expand=True)
-data.ROADCONTOUR = data.ROADCONTOUR.astype('Int64')
+crash_data[['ROADCONTOUR','ROADCONTOURDESCR']] = crash_data.ROADCONTOUR.str.split(pat=' - ', expand=True)
+crash_data.ROADCONTOUR = crash_data.ROADCONTOUR.astype('Int64')
 
-data[['MANNEROFCRASH', 'MANNEROFCRASHDESCR']] = data.MANNEROFCRASH.str.split(pat=' - ', expand=True)
-data.MANNEROFCRASH = data.MANNEROFCRASH.astype('Int64')
+crash_data[['MANNEROFCRASH', 'MANNEROFCRASHDESCR']] = crash_data.MANNEROFCRASH.str.split(pat=' - ', expand=True)
+crash_data.MANNEROFCRASH = crash_data.MANNEROFCRASH.astype('Int64')
 
-data[['TYPEOFPERSON','TYPEOFPERSONDESCR']] = data.TYPEOFPERSON.str.split(pat=' - ', expand=True)
+crash_data[['TYPEOFPERSON','TYPEOFPERSONDESCR']] = crash_data.TYPEOFPERSON.str.split(pat=' - ', expand=True)
 
-data['LIGHTCONDITIONS'] = data.LIGHTCONDITIONSPRIMARY.str[0]
-data.LIGHTCONDITIONS = data.LIGHTCONDITIONS.astype('Int64')
-data['LIGHTCONDITIONSDESCR'] = data.LIGHTCONDITIONSPRIMARY.str[4:]
-data.drop(columns='LIGHTCONDITIONSPRIMARY', inplace=True)
+crash_data['LIGHTCONDITIONS'] = crash_data.LIGHTCONDITIONSPRIMARY.str[0]
+crash_data.LIGHTCONDITIONS = crash_data.LIGHTCONDITIONS.astype('Int64')
+crash_data['LIGHTCONDITIONSDESCR'] = crash_data.LIGHTCONDITIONSPRIMARY.str[4:]
+crash_data.drop(columns='LIGHTCONDITIONSPRIMARY', inplace=True)
 
-data['ROADCONDITIONS'] = data.ROADCONDITIONSPRIMARY.str[0:2]
-data.ROADCONDITIONS = data.ROADCONDITIONS.astype('Int64')
-data['ROADCONDITIONSDESCR'] = data.ROADCONDITIONSPRIMARY.str[5:]
-data.drop(columns='ROADCONDITIONSPRIMARY', inplace=True)
+crash_data['ROADCONDITIONS'] = crash_data.ROADCONDITIONSPRIMARY.str[0:2]
+crash_data.ROADCONDITIONS = crash_data.ROADCONDITIONS.astype('Int64')
+crash_data['ROADCONDITIONSDESCR'] = crash_data.ROADCONDITIONSPRIMARY.str[5:]
+crash_data.drop(columns='ROADCONDITIONSPRIMARY', inplace=True)
 
-data[['ROADSURFACE', 'ROADSURFACEDESCR']] = data.ROADSURFACE.str.split(pat=' - ', expand=True)
-data.ROADSURFACE = data.ROADSURFACE.astype('Int64')
+crash_data[['ROADSURFACE', 'ROADSURFACEDESCR']] = crash_data.ROADSURFACE.str.split(pat=' - ', expand=True)
+crash_data.ROADSURFACE = crash_data.ROADSURFACE.astype('Int64')
 
 # Remove the score 
-data.CRASHLOCATION = data.CRASHLOCATION.str.replace(r'\d\d - ', '')
+crash_data.CRASHLOCATION = crash_data.CRASHLOCATION.str.replace(r'\d\d - ', '')
 
-data['GENDER'] = data.GENDER.str.replace('F - ', '')
-data['GENDER'] = data.GENDER.str.replace('M - ', '')
-data['GENDER'] = data.GENDER.str.replace('U - ', '')
-data.GENDER.unique()
+crash_data['GENDER'] = crash_data.GENDER.str.replace('F - ', '')
+crash_data['GENDER'] = crash_data.GENDER.str.replace('M - ', '')
+crash_data['GENDER'] = crash_data.GENDER.str.replace('U - ', '')
+crash_data.GENDER.unique()
 
-data[['INJURIES', 'INJURIESDESCR']] = data.INJURIES.str.split(pat=' - ', expand=True)
-data.INJURIES = data.INJURIES.astype('Int64')
+crash_data[['INJURIES', 'INJURIESDESCR']] = crash_data.INJURIES.str.split(pat=' - ', expand=True)
+crash_data.INJURIES = crash_data.INJURIES.astype('Int64')
 
 
-data.loc[data['INJURIESDESCR'] == 'NO APPARENTY INJURY', 'INJURIESDESCR'] = 'NO APPARENT INJURY'    # Fix the typo in `5 - NO APPARENTY INJURY`
+crash_data.loc[crash_data['INJURIESDESCR'] == 'NO APPARENTY INJURY', 'INJURIESDESCR'] = 'NO APPARENT INJURY'    # Fix the typo in `5 - NO APPARENTY INJURY`
 
-data.UNITTYPE = data.UNITTYPE.str.replace(r'\d\d - ', '')
+crash_data.UNITTYPE = crash_data.UNITTYPE.str.replace(r'\d\d - ', '')
