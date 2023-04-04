@@ -71,4 +71,5 @@ crash_data.loc[crash_data['ADDRESS_X'].str.contains('W MITCHELL$|GLENWAY$', rege
 
 crash_data.loc[crash_data['ADDRESS_X'].str.contains('GLENWAY$', regex=True, na=False), 'ADDRESS_X'] = 'GLENWAY AVE'
 
+# Add RD to the streets missing it
 crash_data.loc[crash_data['ADDRESS_X'].str.contains('READING$', regex=True, na=False), 'ADDRESS_X'] = 'READING RD'
