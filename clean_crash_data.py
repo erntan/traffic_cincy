@@ -58,3 +58,7 @@ crash_data.INJURIES = crash_data.INJURIES.astype('Int64')
 crash_data.loc[crash_data['INJURIESDESCR'] == 'NO APPARENTY INJURY', 'INJURIESDESCR'] = 'NO APPARENT INJURY'    # Fix the typo in `5 - NO APPARENTY INJURY`
 
 crash_data.UNITTYPE = crash_data.UNITTYPE.str.replace(r'\d\d - ', '')
+
+## Cleaning 
+# Standardizing street names 
+crash_data.ADDRESS_X = crash_data.ADDRESS_X.str.replace('AVENUE$|AV$', 'AVE', regex=True)
