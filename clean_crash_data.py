@@ -63,6 +63,9 @@ crash_data.UNITTYPE = crash_data.UNITTYPE.str.replace(r'\d\d - ', '')
 # Standardizing street names 
 crash_data.ADDRESS_X = crash_data.ADDRESS_X.str.replace('AVENUE$|AV$', 'AVE', regex=True)
 
+
+crash_data.ADDRESS_X = crash_data.ADDRESS_X.str.replace('RD.$', 'RD', regex=True)
+
 # Add AVE to streets missing it 
 crash_data.loc[crash_data['ADDRESS_X'].str.contains('W MITCHELL$|GLENWAY$', regex=True, na=False), 'ADDRESS_X'] = 'W MITCHELL AVE'
 
