@@ -67,3 +67,5 @@ crash_data.ADDRESS_X = crash_data.ADDRESS_X.str.replace('AVENUE$|AV$', 'AVE', re
 crash_data.loc[crash_data['ADDRESS_X'].str.contains('W MITCHELL$|GLENWAY$', regex=True, na=False), 'ADDRESS_X'] = 'W MITCHELL AVE'
 
 crash_data.loc[crash_data['ADDRESS_X'].str.contains('GLENWAY$', regex=True, na=False), 'ADDRESS_X'] = 'GLENWAY AVE'
+
+crash_data.loc[crash_data['ADDRESS_X'].str.contains('READING$', regex=True, na=False), 'ADDRESS_X'] = 'READING RD'
