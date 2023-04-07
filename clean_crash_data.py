@@ -1,7 +1,7 @@
 # Script to clean crash data
 import pandas as pd 
 
-crash_raw = pd.read_csv("Traffic_Crash_Reports__CPD_.csv")
+crash_raw = pd.read_csv("Traffic_Crash_Reports__CPD_.csv", dtype={'CRASHLOCATION':'string', 'ZIP':'string'})
 
 crash_data = crash_raw 
 
