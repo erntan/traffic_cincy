@@ -72,3 +72,7 @@ crash_data.loc[crash_data['ADDRESS_X'].str.contains('GLENWAY$', regex=True, na=F
 
 # Add RD to the streets missing it
 crash_data.loc[crash_data['ADDRESS_X'].str.contains('READING$', regex=True, na=False), 'ADDRESS_X'] = 'READING RD'
+
+## USEFUL ADDITIONS
+# Add column STREET 
+crash_data['STREET'] = crash_data.ADDRESS_X.str.replace('^\d+X+ ', '', regex=True)
