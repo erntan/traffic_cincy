@@ -1,21 +1,26 @@
+import warnings 
+warnings.filterwarnings('ignore', ".*`df\.iloc\[:, i\] = newvals`.*", FutureWarning)
 # Script to clean crash data
 import pandas as pd 
 
-crash_raw = pd.read_csv("Traffic_Crash_Reports__CPD_.csv", dtype={'CRASHLOCATION':'string', 'ZIP':'string'})
+crash_raw = pd.read_csv("Traffic_Crash_Reports__CPD_.csv", dtype={'CRASHLOCATION':'string', 'ZIP':'string', 'LOCALREPORTNO':'string', 'CRASHSEVERITYID':'string'})
+print("CSV has been read.")
 
-crash_data = crash_raw 
+crash_data = crash_raw.copy()
 
 ## Convert data types
 # Strings to dates
 crash_data.loc[:, 'CRASHDATE'] = pd.to_datetime(crash_data.CRASHDATE)
 crash_data.loc[:, 'DATECRASHREPORTED'] = pd.to_datetime(crash_data.DATECRASHREPORTED)
 
+print("Data types have been converted.")
+
 # Numbers to strings
 crash_data.loc[:, 'LOCALREPORTNO'] = crash_data.LOCALREPORTNO.apply(str )
 crash_data.loc[:, 'CRASHSEVERITYID'] = crash_data.CRASHSEVERITYID.apply(str)
 
 # Stripping the trailing zeros from ZIP 
-crash_data.loc[:,'ZIP'] = crash_data.ZIP.astype(str)
+# crash_data.loc[:,'ZIP'] = crash_data.ZIP.astype(str)
 crash_data.loc[:,'ZIP'] = crash_data.ZIP.str[:5]
 
 ## Splitting fields - Separate scores from descriptions
@@ -58,6 +63,9 @@ crash_data.INJURIES = crash_data.INJURIES.astype('Int64')
 crash_data.loc[crash_data['INJURIESDESCR'] == 'NO APPARENTY INJURY', 'INJURIESDESCR'] = 'NO APPARENT INJURY'    # Fix the typo in `5 - NO APPARENTY INJURY`
 
 crash_data.UNITTYPE = crash_data.UNITTYPE.str.replace(r'\d\d - ', '')
+
+## Strings to categorical
+crash_data.INJURIESDESCR = crash_data.INJURIESDESCR.astype('category')
 
 ## Cleaning 
 # Standardizing street names 
