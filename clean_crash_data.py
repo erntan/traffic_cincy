@@ -8,79 +8,81 @@ print("CSV has been read.")
 
 crash_data = crash_raw.copy()
 
+crash_data.columns = crash_data.columns.str.lower()
+
 ## Convert data types
 # Strings to dates
-crash_data.loc[:, 'CRASHDATE'] = pd.to_datetime(crash_data.CRASHDATE)
-crash_data.loc[:, 'DATECRASHREPORTED'] = pd.to_datetime(crash_data.DATECRASHREPORTED)
+crash_data.loc[:, 'crashdate'] = pd.to_datetime(crash_data.crashdate)
+crash_data.loc[:, 'datecrashreported'] = pd.to_datetime(crash_data.datecrashreported)
 
 print("Data types have been converted.")
 
 # Numbers to strings
-crash_data.loc[:, 'LOCALREPORTNO'] = crash_data.LOCALREPORTNO.apply(str )
-crash_data.loc[:, 'CRASHSEVERITYID'] = crash_data.CRASHSEVERITYID.apply(str)
+crash_data.loc[:, 'localreportno'] = crash_data.localreportno.apply(str )
+crash_data.loc[:, 'crashseverityid'] = crash_data.crashseverityid.apply(str)
 
 # Stripping the trailing zeros from ZIP 
-# crash_data.loc[:,'ZIP'] = crash_data.ZIP.astype(str)
-crash_data.loc[:,'ZIP'] = crash_data.ZIP.str[:5]
+# crash_data.loc[:,'zip'] = crash_data.zip.astype(str)
+crash_data.loc[:,'zip'] = crash_data.zip.str[:5]
 
 ## Splitting fields - Separate scores from descriptions
-crash_data[['CRASHSEVERITY','CRASHSEVERITYDESCR']] = crash_data.CRASHSEVERITY.str.split(pat=' - ', expand=True)
-crash_data.CRASHSEVERITY = crash_data.CRASHSEVERITY.astype('Int64')
+crash_data[['crashseverity','crashseveritydescr']] = crash_data.crashseverity.str.split(pat=' - ', expand=True)
+crash_data.crashseverity = crash_data.crashseverity.astype('Int64')
 
-crash_data[['ROADCONTOUR','ROADCONTOURDESCR']] = crash_data.ROADCONTOUR.str.split(pat=' - ', expand=True)
-crash_data.ROADCONTOUR = crash_data.ROADCONTOUR.astype('Int64')
+crash_data[['roadcontour','roadcontourdescr']] = crash_data.roadcontour.str.split(pat=' - ', expand=True)
+crash_data.roadcontour = crash_data.roadcontour.astype('Int64')
 
-crash_data[['MANNEROFCRASH', 'MANNEROFCRASHDESCR']] = crash_data.MANNEROFCRASH.str.split(pat=' - ', expand=True)
-crash_data.MANNEROFCRASH = crash_data.MANNEROFCRASH.astype('Int64')
+crash_data[['mannerofcrash', 'mannerofcrashdescr']] = crash_data.mannerofcrash.str.split(pat=' - ', expand=True)
+crash_data.mannerofcrash = crash_data.mannerofcrash.astype('Int64')
 
-crash_data[['TYPEOFPERSON','TYPEOFPERSONDESCR']] = crash_data.TYPEOFPERSON.str.split(pat=' - ', expand=True)
+crash_data[['typeofperson','typeofpersondescr']] = crash_data.typeofperson.str.split(pat=' - ', expand=True)
 
-crash_data['LIGHTCONDITIONS'] = crash_data.LIGHTCONDITIONSPRIMARY.str[0]
-crash_data.LIGHTCONDITIONS = crash_data.LIGHTCONDITIONS.astype('Int64')
-crash_data['LIGHTCONDITIONSDESCR'] = crash_data.LIGHTCONDITIONSPRIMARY.str[4:]
-crash_data.drop(columns='LIGHTCONDITIONSPRIMARY', inplace=True)
+crash_data['lightconditions'] = crash_data.lightconditionsprimary.str[0]
+crash_data.lightconditions = crash_data.lightconditions.astype('Int64')
+crash_data['lightconditionsdescr'] = crash_data.lightconditionsprimary.str[4:]
+crash_data.drop(columns='lightconditionsprimary', inplace=True)
 
-crash_data['ROADCONDITIONS'] = crash_data.ROADCONDITIONSPRIMARY.str[0:2]
-crash_data.ROADCONDITIONS = crash_data.ROADCONDITIONS.astype('Int64')
-crash_data['ROADCONDITIONSDESCR'] = crash_data.ROADCONDITIONSPRIMARY.str[5:]
-crash_data.drop(columns='ROADCONDITIONSPRIMARY', inplace=True)
+crash_data['roadconditions'] = crash_data.roadconditionsprimary.str[0:2]
+crash_data.roadconditions = crash_data.roadconditions.astype('Int64')
+crash_data['roadconditionsdescr'] = crash_data.roadconditionsprimary.str[5:]
+crash_data.drop(columns='roadconditionsprimary', inplace=True)
 
-crash_data[['ROADSURFACE', 'ROADSURFACEDESCR']] = crash_data.ROADSURFACE.str.split(pat=' - ', expand=True)
-crash_data.ROADSURFACE = crash_data.ROADSURFACE.astype('Int64')
+crash_data[['roadsurface', 'roadsurfacedescr']] = crash_data.roadsurface.str.split(pat=' - ', expand=True)
+crash_data.roadsurface = crash_data.roadsurface.astype('Int64')
 
 # Remove the score 
-crash_data.CRASHLOCATION = crash_data.CRASHLOCATION.str.replace(r'\d\d - ', '')
+crash_data.crashlocation = crash_data.crashlocation.str.replace(r'\d\d - ', '')
 
-crash_data['GENDER'] = crash_data.GENDER.str.replace('F - ', '')
-crash_data['GENDER'] = crash_data.GENDER.str.replace('M - ', '')
-crash_data['GENDER'] = crash_data.GENDER.str.replace('U - ', '')
-crash_data.GENDER.unique()
+crash_data['gender'] = crash_data.gender.str.replace('F - ', '')
+crash_data['gender'] = crash_data.gender.str.replace('M - ', '')
+crash_data['gender'] = crash_data.gender.str.replace('U - ', '')
+crash_data.gender.unique()
 
-crash_data[['INJURIES', 'INJURIESDESCR']] = crash_data.INJURIES.str.split(pat=' - ', expand=True)
-crash_data.INJURIES = crash_data.INJURIES.astype('Int64')
+crash_data[['injuries', 'injuriesdescr']] = crash_data.injuries.str.split(pat=' - ', expand=True)
+crash_data.injuries = crash_data.injuries.astype('Int64')
 
 
-crash_data.loc[crash_data['INJURIESDESCR'] == 'NO APPARENTY INJURY', 'INJURIESDESCR'] = 'NO APPARENT INJURY'    # Fix the typo in `5 - NO APPARENTY INJURY`
+crash_data.loc[crash_data['injuriesdescr'] == 'NO APPARENTY INJURY', 'injuriesdescr'] = 'NO APPARENT INJURY'    # Fix the typo in `5 - NO APPARENTY INJURY`
 
-crash_data.UNITTYPE = crash_data.UNITTYPE.str.replace(r'\d\d - ', '')
+crash_data.unittype = crash_data.unittype.str.replace(r'\d\d - ', '')
 
 ## Strings to categorical
-crash_data.INJURIESDESCR = crash_data.INJURIESDESCR.astype('category')
+crash_data.injuriesdescr = crash_data.injuriesdescr.astype('category')
 
 ## Cleaning 
 # Standardizing street names 
-crash_data.ADDRESS_X = crash_data.ADDRESS_X.str.replace('AVENUE$|AV$', 'AVE', regex=True)
+crash_data.address_x = crash_data.address_x.str.replace('AVENUE$|AV$', 'AVE', regex=True)
 
-crash_data.ADDRESS_X = crash_data.ADDRESS_X.str.replace('RD.$', 'RD', regex=True)
+crash_data.address_x = crash_data.address_x.str.replace('RD.$', 'RD', regex=True)
 
 # Add AVE to streets missing it 
-crash_data.loc[crash_data['ADDRESS_X'].str.contains('W MITCHELL$|GLENWAY$', regex=True, na=False), 'ADDRESS_X'] = 'W MITCHELL AVE'
+crash_data.loc[crash_data['address_x'].str.contains('W MITCHELL$|GLENWAY$', regex=True, na=False), 'address_x'] = 'W MITCHELL AVE'
 
-crash_data.loc[crash_data['ADDRESS_X'].str.contains('GLENWAY$', regex=True, na=False), 'ADDRESS_X'] = 'GLENWAY AVE'
+crash_data.loc[crash_data['address_x'].str.contains('GLENWAY$', regex=True, na=False), 'address_x'] = 'GLENWAY AVE'
 
 # Add RD to the streets missing it
-crash_data.loc[crash_data['ADDRESS_X'].str.contains('READING$', regex=True, na=False), 'ADDRESS_X'] = 'READING RD'
+crash_data.loc[crash_data['address_x'].str.contains('READING$', regex=True, na=False), 'address_x'] = 'READING RD'
 
 ## USEFUL ADDITIONS
 # Add column STREET 
-crash_data['STREET'] = crash_data.ADDRESS_X.str.replace('^\d+X+ ', '', regex=True)
+crash_data['street'] = crash_data.address_x.str.replace('^\d+X+ ', '', regex=True)
